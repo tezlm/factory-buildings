@@ -1,0 +1,8 @@
+{
+  "name": "Factory Building",
+  "description": "A factory building",
+  "requirements": ["lead/10", "copper/20"],
+  "size": 4,
+  "health": 1200
+}
+
