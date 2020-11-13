@@ -1,0 +1,10 @@
+{
+  "name": "Factory Wall",
+  "localizedName": "Factory Wall",
+  "description": "Walls for a factory block",
+  "size": 1,
+  "breakable": false,
+  "destructible": false,
+  "buildVisibility": "hidden"
+}
+
