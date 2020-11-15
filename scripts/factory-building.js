@@ -1,6 +1,7 @@
 const simulation = require("simulation");
-module.exports = (map, listener) => {
-  print(0);
+const events = require("events");
+const exitUnitName = "factory-buildings-exit";
+module.exports = (map) => {
   var facc = extendContent(Wall, "factory-building", {
     icons() {
       return [
@@ -23,30 +24,38 @@ module.exports = (map, listener) => {
 
   facc.buildType = () => extendContent(Wall.WallBuild, facc, {
     pocketDimension: {},
-    used: false,
+    used: null,
     oldUnit: null,
+    eventId: -1,
 
     // load map on click
     tapped() {
-      if (this.used) { simulation.load(this.pocketDimension); }
-
+      var exitUnit = Vars.content.getByName(ContentType.unit, exitUnitName);
       // create a new pocket dimension
-      if (!this.used) {
+      if (this.used === null) {
         this.pocketDimension = simulation.create(map, this);
         this.used = true;
-        Events.on(Trigger.update.class, () => {
-          if (!Vars.player.unit()) return;
-          if (Vars.player.unit().type.toString() === "factory-buildings-exit") {
-            simulation.reset(this.pocketDimension, this.oldUnit);
+        events.create(Trigger.update.class, (event) => {
+          if (Vars.player.unit().type === null) return;
+          if (Vars.player.unit().type === exitUnit) {
+            simulation.reset(this.pocketDimension, event.oldUnit);
           }
-          this.oldUnit = Vars.player.unit();
+          event.oldUnit = Vars.player.unit();
         });
+      } else {
+        simulation.load(this.pocketDimension);
       }
     },
 
     // simulate factory
     updateTile() {
-      if (this.used) this.pocketDimension = simulation.tick(this.pocketDimension);
+      if (this.used !== null) {
+        this.pocketDimension = simulation.tick(this.pocketDimension);
+      }
+      if (this.eventId !== -1) {
+        events.remove(this.eventId);
+        this.eventId = null;
+      }
     }
   });
 };

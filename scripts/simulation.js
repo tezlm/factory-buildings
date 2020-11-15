@@ -31,12 +31,19 @@ const simulation = {
   },
 
   load: function (factory) {
+    //save current state
+    const unit = Vars.player.unit();
+    const orgin = { world: Vars.world, state: Vars.state };
+
     // load map
+    Vars.state = new GameState;
+    Vars.world = new World;
     Vars.state = factory.state;
     Vars.world = factory.world;
     Vars.logic.play();
 
-    this.setPlayer();
+    this.setPlayer(unit);
+    return orgin;
   },
 
   setPlayer: function (unit) {
@@ -49,10 +56,16 @@ const simulation = {
   },
 
   reset: function (factory, unit) {
+    factory.world = Vars.world;
+    factory.state = Vars.state;
+    Vars.world = new World;
+    Vars.state = new GameState;
     Vars.world = factory.orgin.world;
     Vars.state = factory.orgin.state;
     Vars.logic.play();
     this.setPlayer(unit);
+    // Vars.player.unit().x = factory.pos.x;
+    // Vars.player.unit().y = factory.pos.y;
   },
 
   tick: function (world) {
