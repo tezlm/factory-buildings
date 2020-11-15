@@ -131,7 +131,6 @@ module.exports = () => {
   // h
   // wall.outputsPower = true;
   wall.consumesTap = true;
-  wall.unitType = null;
   wall.unitCapModifier = 0;
   wall.buildType = () => extendContent(CoreBlock.CoreBuild, wall, {
     tapped() { }

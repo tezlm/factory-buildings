@@ -1,0 +1,7 @@
+{
+  "name": "exit",
+  "description": "special unit to exit factory-buildings",
+  "type": "MechUnit",
+  "flying": true,
+  "isCounted": false
+}
