@@ -2,8 +2,8 @@ const simulation = {
   create: function (map, from) {
     // copy rules/world from normal world
     const orgin = { world: Vars.world, state: Vars.state };
-    Vars.state = new GameState;
-    Vars.world = new World;
+    Vars.state = new GameState();
+    Vars.world = new World();
 
     // copy player from normal world
     const unit = Vars.player.unit();
@@ -26,6 +26,7 @@ const simulation = {
 
     this.setPlayer(unit);
     Vars.logic.play();
+    Events.fire(new WorldLoadEvent);
 
     return { world: Vars.world, state: Vars.state, orgin: orgin };
   },
@@ -36,11 +37,11 @@ const simulation = {
     const orgin = { world: Vars.world, state: Vars.state };
 
     // load map
-    Vars.state = new GameState;
-    Vars.world = new World;
+    Vars.state = new GameState();
+    Vars.world = new World();
     Vars.state = factory.state;
     Vars.world = factory.world;
-    Vars.logic.play();
+    Events.fire(new WorldLoadEvent);
 
     this.setPlayer(unit);
     return orgin;
@@ -55,15 +56,16 @@ const simulation = {
     Vars.player.unit().health = unit.health;
   },
 
-  reset: function (factory, unit) {
+  reset: function (factory) {
     factory.world = Vars.world;
     factory.state = Vars.state;
-    Vars.world = new World;
-    Vars.state = new GameState;
+    Vars.world = new World();
+    Vars.state = new GameState();
+    Events.fire(new WorldLoadEvent);
     Vars.world = factory.orgin.world;
     Vars.state = factory.orgin.state;
-    Vars.logic.play();
-    this.setPlayer(unit);
+    Events.fire(new WorldLoadEvent);
+    this.setPlayer(factory.unit);
     // Vars.player.unit().x = factory.pos.x;
     // Vars.player.unit().y = factory.pos.y;
   },
@@ -76,7 +78,7 @@ const simulation = {
       }
     }
     return world;
-  }
-}
+  },
+};
 
-module.exports = simulation; 
+module.exports = simulation;

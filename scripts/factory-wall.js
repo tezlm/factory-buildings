@@ -1,6 +1,6 @@
 // big thank to deltanedas for the block texture code
 
-module.exports = () => {
+module.exports = $ => {
   // const diags = [
   //   [-1, 1],
   //   [1, 1],
@@ -27,7 +27,6 @@ module.exports = () => {
     //     Core.atlas.find(this.name + "-edge_0"),
     //     Core.atlas.find(this.name + "-edge_1")
     //   ];
-
     //   this.cornerRegions = [];
     //   this.icornerRegions = [];
     //   for (var i = 0; i < 4; i++) {
@@ -35,17 +34,14 @@ module.exports = () => {
     //     this.icornerRegions[i] = Core.atlas.find(this.name + "-icorner_" + i);
     //   }
     // },
-
     // draw(tile) {
     //   this.super$draw(tile);
     //   this.drawEdges(tile);
     //   this.drawCorners(tile);
     // },
-
     // drawEdges(tile) {
     //   const bits = tile.entity.blendBits;
     //   const dx = tile.drawx(), dy = tile.drawy();
-
     //   for (var i = 0; i < 4; i++) {
     //     // First nibble has the edges
     //     if ((bits & (1 << i)) == 0) {
@@ -53,11 +49,9 @@ module.exports = () => {
     //     }
     //   }
     // },
-
     // drawCorners(tile) {
     //   const bits = tile.entity.blendBits;
     //   const dx = tile.drawx(), dy = tile.drawy();
-
     //   for (var i = 0; i < 4; i++) {
     //     if ((bits & (256 << i)) != 0) {
     //       // Third nibble has the inner corners, which take priority
@@ -68,21 +62,16 @@ module.exports = () => {
     //     }
     //   }
     // },
-
     // placed(tile) {
     //   this.super$placed(tile);
-
     //   // Server doesn't care about drawing, stop
     //   if (!Vars.ui) return;
-
     //   this.reblendAll(tile);
     //   this.reblend(tile);
     // },
-
     // removed(tile) {
     //   this.reblendAll(tile);
     // },
-
     // reblendAll(tile) {
     //   for (var i in all) {
     //     var other = tile.getNearby(all[i][0], all[i][1]);
@@ -91,11 +80,9 @@ module.exports = () => {
     //     }
     //   }
     // },
-
     // reblend(tile) {
     //   // All edges and outer corners by default
     //   var bits = 0;
-
     //   for (var i = 0; i < 4; i++) {
     //     var prev = this.adjacent(tile, (i + 3) % 4);
     //     var current = this.adjacent(tile, i);;
@@ -112,15 +99,12 @@ module.exports = () => {
     //       }
     //     }
     //   }
-
     //   tile.entity.blendBits = bits;
     // },
-
     // adjacent(tile, i) {
     //   const other = tile.getNearby(dirs[i].x, dirs[i].y);
     //   return other && other.block() == this;
     // },
-
     // /* Whether a router is a corner of a square or just a bend */
     // interior(tile, i) {
     //   const diag = tile.getNearby(diags[i][0], diags[i][1]);
@@ -132,7 +116,8 @@ module.exports = () => {
   // wall.outputsPower = true;
   wall.consumesTap = true;
   wall.unitCapModifier = 0;
-  wall.buildType = () => extendContent(CoreBlock.CoreBuild, wall, {
-    tapped() { }
-  });
+  wall.buildType = () =>
+    extendContent(CoreBlock.CoreBuild, wall, {
+      tapped() {},
+    });
 };
