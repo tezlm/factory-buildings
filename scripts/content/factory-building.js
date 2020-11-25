@@ -33,7 +33,7 @@ module.exports = ($, map, exit, simulation) => {
   }
 
   facc.buildType = () =>
-    extendContent(Building, facc, {
+    extend(Building, {
       pocketDimension: {},
       used: null,
       enterer: null,
