@@ -18,7 +18,7 @@ $ = Object.assign($, {
       return id;
     },
     remove: function (id) {
-      delete events[id];
+      delete this.events[id];
     },
   },
   insertAfter: function (index, obj) {

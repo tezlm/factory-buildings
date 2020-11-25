@@ -1,9 +1,0 @@
-{
-  "name": "factory wall",
-  "description": "walls for the factory block",
-  "unitType": "factory-buildings-exit",
-  "size": 1,
-  "breakable": false,
-  "destructible": false,
-  "buildVisibility": "hidden"
-}
