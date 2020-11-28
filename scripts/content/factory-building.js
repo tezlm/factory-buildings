@@ -28,6 +28,7 @@ module.exports = ($, map, exit, simulation) => {
         simulation.reset(pocketDimension);
         $.events.remove(listener);
       }
+      // pocketDimension.orgin.world = simulation.tick(pocketDimension.orgin.world);
       pocketDimension.unit = Vars.player.unit();
     });
   }
@@ -35,26 +36,26 @@ module.exports = ($, map, exit, simulation) => {
   facc.buildType = () =>
     extend(Building, {
       pocketDimension: {},
-      used: null,
+      used: false,
       enterer: null,
 
       // load map on click
       tapped() {
         // create a new pocket dimension
-        if (this.used === null) {
+        if (!this.used) {
           this.pocketDimension = simulation.create(map, this);
           listenExit(this.pocketDimension);
           this.used = true;
         } else {
+          this.pocketDimension = simulation.load(this.pocketDimension, this);
           listenExit(this.pocketDimension);
-          simulation.load(this.pocketDimension, this);
         }
       },
 
       // simulate factory
       updateTile() {
-        if (this.used !== null) {
-          this.pocketDimension = simulation.tick(this.pocketDimension);
+        if (this.used) {
+          this.pocketDimension.world = simulation.tick(this.pocketDimension.world);
         }
       },
 

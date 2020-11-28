@@ -4,8 +4,8 @@ module.exports = {
     const unit = Vars.player.unit();
 
     // copy rules/world from normal world
-    var orgin = { world: Vars.world, state: this.state.save(), unit: unit };
-    const state = Vars.state;
+    const orgin = { world: Vars.world, state: this.state.save(), unit: unit };
+    const state = this.state.copy();
 
     // load map
     Vars.world = new World();
@@ -16,9 +16,9 @@ module.exports = {
     this.state.setState(from);
 
     // convert blocks to team
-    for (var i = 0; i < map.height; i++) {
-      for (var j = 0; j < map.width; j++) {
-        Vars.world.tile(i, j).setTeam(from.team);
+    for (var y = 0; y < map.height; y++) {
+      for (var x = 0; x < map.width; x++) {
+        Vars.world.tile(x, y).setTeam(from.team);
       }
     }
 
@@ -33,35 +33,31 @@ module.exports = {
     //save current state
     const unit = Vars.player.unit();
     const orgin = { world: Vars.world, state: this.state.save(), unit: unit };
-    const state = Vars.state;
+    const state = this.state.copy();
 
     // load map
-    Vars.world = new World();
     Vars.world = factory.world;
 
     // copy state
     Vars.state = state;
     this.state.setState(from);
 
+    this.setPlayer(unit);
+    Vars.logic.play();
     Events.fire(new WorldLoadEvent());
 
-    this.setPlayer(unit);
-    return orgin;
+    return { world: Vars.world, state: Vars.state, orgin: orgin };
   },
 
   reset: function (factory) {
     // save factory
     factory.world = Vars.world;
-    const state = Vars.state;
-
     // load original world
-    Vars.world = new World();
     Vars.world = factory.orgin.world;
 
-    // copy state
-    Vars.state = state;
+    // load state    
     this.state.load(factory.orgin.state);
-
+    Vars.logic.play();
     Events.fire(new WorldLoadEvent());
 
     this.setPlayer(factory.unit);
@@ -90,6 +86,17 @@ module.exports = {
       Vars.state.rules.bannedBlocks = things.bannedBlocks;
       Vars.state.rules.enemyCoreBuildRadius = things.enemyCoreBuildRadius;
     },
+    copy: function () {
+      var copy = new GameState;
+      for (var i in Vars.state) {
+        try {
+          copy[i] = Vars.state[i];
+        } catch (e) {
+          //h
+        }
+      }
+      return copy;
+    },
   },
 
   setPlayer: function (unit) {
@@ -102,10 +109,15 @@ module.exports = {
   },
 
   tick: function (world) {
-    for (var i = 0; i < map.height; i++) {
-      for (var j = 0; j < map.width; j++) {
-        var tile = Vars.world.tile(i, j).block();
-        if (tile) tile.updateTile();
+    if (world == null) return;
+    for (var y = 0; y < world.height(); y++) {
+      for (var x = 0; x < world.width(); x++) {
+        var tile = Vars.world.build(x, y);
+        if (tile) {
+          if (tile.updateTile) {
+            tile.updateTile(); //h
+          }
+        }
       }
     }
     return world;
