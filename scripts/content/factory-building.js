@@ -37,7 +37,6 @@ module.exports = ($, map, exit, simulation) => {
     extend(Building, {
       pocketDimension: {},
       used: false,
-      enterer: null,
 
       // load map on click
       tapped() {
@@ -57,19 +56,6 @@ module.exports = ($, map, exit, simulation) => {
         if (this.used) {
           this.pocketDimension.world = simulation.tick(this.pocketDimension.world);
         }
-      },
-
-      canControl() {
-        return true;
-      },
-      shouldAutoTarget() {
-        return false;
-      },
-      unit() {
-        if (this.enterer == null) {
-          this.enterer = UnitTypes.block.create(this.team);
-        }
-        return this.enterer;
       }
     });
 };

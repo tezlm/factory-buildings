@@ -1,4 +1,4 @@
-const script = "[" + this.modName + "/" + this.scriptName + "] ";
+const script = "[" + modName + "/" + scriptName + "] ";
 var $ = (name, type) =>
   Vars.content.getByName(
     ContentType[type || "block"],
@@ -75,6 +75,14 @@ $ = Object.assign($, {
       var obj = {};
       Error.captureStackTrace(obj, this.trace);
       print("You called trace " + obj.stack);
+    },
+  },
+  seq: {
+    toArray: function (seq) {
+      return seq.toArray();
+    },
+    fromArray: function (array) {
+      return Seq.of(array);
     },
   },
 });

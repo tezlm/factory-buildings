@@ -10,7 +10,6 @@ module.exports = ($, exit) => {
     wall.destructible = false;
     wall.hasPower = true;
     wall.buildVisibility = BuildVisibility.hidden;
-    wall.flags = EnumSet.of(BlockFlag.battery);
 
     wall.itemCapacity = i == "factory-wall" ? 0 : 25;
     wall.consumesTap = true;
