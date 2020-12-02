@@ -3,23 +3,20 @@ module.exports = ($, map, exit, simulation) => {
     icons() {
       return [Core.atlas.find($.format(this.name))];
     },
+    // basic factory stuff
+    requirements: ItemStack.with(Items.lead, 10, Items.copper, 20),
+    size: 4,
+    health: 1200,
+    buildVisibility: BuildVisibility.shown,
+    category: Category.effect,
+    consumesTap: true,
+    hasItems: true,
+    itemCapacity: 300,
+    unloadable: true,
+    solid: true,
+    update: true,
+    hasPower: true,
   });
-
-  // basic factory stuff
-  facc.requirements = ItemStack.with(Items.lead, 10, Items.copper, 20);
-  facc.size = 4;
-  facc.health = 1200;
-  facc.buildVisibility = BuildVisibility.shown;
-  facc.category = Category.effect;
-  facc.consumesTap = true;
-  facc.hasItems = true;
-  facc.itemCapacity = 300;
-  facc.unloadable = true;
-  facc.solid = true;
-  facc.update = true;
-  facc.hasPower = true;
-  // facc.outputsPower = true;
-  // facc.consumesPower = true;
 
   function listenExit(pocketDimension) {
     var listener = $.events.create(Trigger.update.class, () => {
@@ -56,6 +53,10 @@ module.exports = ($, map, exit, simulation) => {
         if (this.used) {
           this.pocketDimension.world = simulation.tick(this.pocketDimension.world);
         }
-      }
+      },
+
+      acceptItem(source, item) {
+        return this.items.get(item) < this.block.itemCapacity;
+      },
     });
 };
