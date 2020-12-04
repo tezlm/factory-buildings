@@ -39,11 +39,12 @@ module.exports = ($, map, exit, simulation) => {
       tapped() {
         // create a new pocket dimension
         if (!this.used) {
-          this.pocketDimension = simulation.create(map, this);
+          // this.pocketDimension = simulation.create(map, this);
+          this.pocketDimension = new Simulation(map, this);
           listenExit(this.pocketDimension);
           this.used = true;
         } else {
-          this.pocketDimension = simulation.load(this.pocketDimension, this);
+          this.pocketDimension.load();
           listenExit(this.pocketDimension);
         }
       },
@@ -51,7 +52,7 @@ module.exports = ($, map, exit, simulation) => {
       // simulate factory
       updateTile() {
         if (this.used) {
-          this.pocketDimension.world = simulation.tick(this.pocketDimension.world);
+          this.pocketDimension.tick();
         }
       },
 

@@ -1,5 +1,5 @@
 module.exports = ($, exit) => {
-  ["factory-wall", "factory-wall-storage"].forEach(i => {
+  ["factory-wall", "factory-wall-storage"].forEach((i) => {
     const wall = extendContent(CoreBlock, i, {});
 
     // h
@@ -16,7 +16,7 @@ module.exports = ($, exit) => {
     wall.unitCapModifier = 0;
     wall.buildType = () =>
       extendContent(CoreBlock.CoreBuild, wall, {
-        tapped() { },
+        tapped() {},
       });
   });
 };
