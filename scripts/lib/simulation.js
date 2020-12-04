@@ -9,7 +9,7 @@ function Simulation(map, from) {
   // load map
   Vars.world = new World();
   Vars.world.loadMap(map);
-
+  //testing something
   // copy state
   Vars.state = this.orgin.state;
   this.state.setState(from);
