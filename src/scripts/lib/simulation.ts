@@ -3,15 +3,17 @@ function Simulation(map, from) {
   this.orgin = {
     world: Vars.world,
     state: this.state.copy(),
-    unit: Vars.player.unit(),
   };
 
   // load map
+  const state = Vars.state;
+  Vars.state = new GameState();
   Vars.world = new World();
   Vars.world.loadMap(map);
-  //testing something
+
   // copy state
-  Vars.state = this.orgin.state;
+  Vars.state = state;
+  this.orgin.state = this.state.save();
   this.state.setState(from);
 
   // convert blocks to team
@@ -28,6 +30,7 @@ function Simulation(map, from) {
   this.world = Vars.world;
   this.state = Vars.state;
 }
+
 Object.defineProperty(Simulation, "state", {
   save: function () {
     var things = {};
@@ -52,13 +55,35 @@ Object.defineProperty(Simulation, "state", {
 });
 
 Simulation.prototype.load = function () {
-  //save current state
-  const orgin = {
+  // copy rules/world from normal world
+  this.orgin = {
     world: Vars.world,
-    state: this.state.save(),
-    unit: Vars.player.unit(),
+    state: this.state.copy(),
   };
-  const state = this.state.copy();
+
+  // load map
+  Vars.state = new GameState();
+  Vars.world = new World();
+  Vars.world.loadMap(map);
+
+  // copy state
+  Vars.state = this.orgin.state;
+  this.orgin.state = this.state.save();
+  this.state.setState(from);
+
+  // convert blocks to team
+  for (var y = 0; y < map.height; y++) {
+    for (var x = 0; x < map.width; x++) {
+      Vars.world.tile(x, y).setTeam(from.team);
+    }
+  }
+
+  this.setPlayer(this.orgin.unit);
+  Vars.logic.play();
+  Events.fire(new WorldLoadEvent());
+
+  this.world = Vars.world;
+  this.state = Vars.state;
 
   // load map
   Vars.world = factory.world;
@@ -73,6 +98,10 @@ Simulation.prototype.load = function () {
 
   return { world: Vars.world, state: Vars.state, orgin: orgin };
 };
+
+Simulation.prototype.reset = function () {};
+
+Simulation.prototype.reset = function () {};
 
 //   reset: function (factory) {
 //     // save factory

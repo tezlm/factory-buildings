@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "preserveConstEnums": true,
+    "outDir": "../out",
+    "sourceMap": true,
+  },
+  },
+  "include": ["./"],
+  "exclude": ["tsconfig.json"]
+}
