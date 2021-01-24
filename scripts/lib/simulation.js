@@ -1,8 +1,9 @@
 const world = require(this.modName + "/lib/maps");
 const exit = Vars.content.getByName(ContentType.unit, this.modName + "-exit");
 
-function Simulation(size, from) {
-  this.world = world(size, 100, from.team);
+function Simulation(from) {
+  const size = from.size;
+  this.world = world(size, from.block.itemCapacity, from.team);
   const state = new GameState();
   state.rules.canGameOver = false;
   state.rules.unitCap = 9999;
@@ -12,6 +13,12 @@ function Simulation(size, from) {
   this.onexit = () => {};
   this.playerUnit = null;
   this.origin = null;
+
+  let build;
+  this.world.tiles().each((x, y) => {
+    build = this.world.build(x, y);
+    if (build) build.updateProximity();
+  });
 
   this.unload = () => {
     if (!this.origin.hasOwnProperty("world")) return;
@@ -46,9 +53,7 @@ function Simulation(size, from) {
 
     Vars.logic.play();
 
-    Timer.schedule(() => {
-      Events.fire(new WorldLoadEvent());
-    }, 1 / 1000);
+    Events.fire(new WorldLoadEvent());
 
     const listener = () => {
       const unit = Vars.player.unit();
@@ -74,94 +79,8 @@ function Simulation(size, from) {
       }
     }
   };
+
+  Vars.renderer.blocks.drawShadows();
 }
 
 module.exports = Simulation;
-/*
-  // copy rules/world from normal world
-  this.orgin = {
-    world: Vars.world,
-    state: this.state.copy(),
-  };
-
-  // load map
-  const state = Vars.state;
-  Vars.state = new GameState();
-  Vars.world = new World();
-  Vars.world.loadMap(map);
-
-  // copy state
-  Vars.state = state;
-  this.orgin.state = this.state.save();
-  this.state.setState(from);
-
-  // convert blocks to team
-  for (var y = 0; y < map.height; y++) {
-    for (var x = 0; x < map.width; x++) {
-      Vars.world.tile(x, y).setTeam(from.team);
-    }
-  }
-
-  this.setPlayer(this.orgin.unit);
-  Vars.logic.play();
-  Events.fire(new WorldLoadEvent());
-
-  this.world = Vars.world;
-  this.state = Vars.state;
-}
-
-Object.defineProperty(Simulation, "state", {
-  save: function () {
-    var things = {};
-    things.canGameOver = Vars.state.rules.canGameOver;
-    things.unitCap = Vars.state.rules.unitCap;
-    things.bannedBlocks = Vars.state.rules.bannedBlocks;
-    things.enemyCoreBuildRadius = Vars.state.rules.enemyCoreBuildRadius;
-    return things;
-  },
-  setState: function (from) {
-    Vars.state.rules.canGameOver = false;
-    Vars.state.rules.unitCap = 9999;
-    Vars.state.rules.bannedBlocks.add(from.block);
-    Vars.state.rules.enemyCoreBuildRadius = 0;
-  },
-  load: function (things) {
-    Vars.state.rules.canGameOver = things.canGameOver;
-    Vars.state.rules.unitCap = things.unitCap;
-    Vars.state.rules.bannedBlocks = things.bannedBlocks;
-    Vars.state.rules.enemyCoreBuildRadius = things.enemyCoreBuildRadius;
-  },
-});
-
-Simulation.prototype.load = function () {
-  
-};
-
-//   reset: function (factory) {
-//     // save factory
-//     factory.world = Vars.world;
-//     // load original world
-//     Vars.world = factory.orgin.world;
-
-//     // load state
-//     this.state.load(factory.orgin.state);
-//     Vars.logic.play();
-//     Events.fire(new WorldLoadEvent());
-
-//     this.setPlayer(factory.unit);
-//     Vars.player.unit().x = factory.orgin.unit.x;
-//     Vars.player.unit().y = factory.orgin.unit.y;
-//   },
-
-// setPlayer: function (unit) {
-//   Groups.unit.clear();
-
-//   // spawn player
-//   Vars.player.unit((unit.type || UnitTypes.alpha).spawn(5 * 8, 5 * 8));
-//   Vars.player.team(unit.team);
-//   Vars.player.unit().health = unit.health;
-// },
-
-// },
-// });
-*/
