@@ -15,7 +15,7 @@ function Simulation(from) {
   this.origin = null;
 
   let build;
-  this.world.tiles().each((x, y) => {
+  this.world.tiles.each((x, y) => {
     build = this.world.build(x, y);
     if (build) build.updateProximity();
   });
@@ -52,7 +52,6 @@ function Simulation(from) {
     Vars.state = this.state;
 
     Vars.logic.play();
-
     Events.fire(new WorldLoadEvent());
 
     const listener = () => {

@@ -38,10 +38,30 @@ facc.buildType = () =>
     updateTile() {
       if (this.pocketDimension) {
         this.pocketDimension.tick();
-        if(this.oldItems) {
-          this.pocketDimension.world.build(0, 0);
-        }
-        this.oldItems = this.items.copy();
+        // if (this.oldItems) {
+        //   const core = this.pocketDimension.world.build(0, 0);
+        //   if (!core) return;
+          
+        //   const dIn = {};
+        //   const dOut = {};
+
+        //   // calculate item deltas
+        //   core.items.each((item, amount) => {
+        //     dIn[item] = amount;
+        //   });
+        //   this.items.each((item, amount) => {
+        //     dOut[item] = amount;
+        //   });
+        //   this.oldItems.each((item, amount) => {
+        //     dIn[item] -= amount;
+        //     dOut[item] -= amount;
+        //   });
+
+        //   // apply changes
+        //   this.items.add(dOut);
+        //   core.items.add(dIn);
+        // }
+        // this.oldItems = this.items.copy();
       }
     },
 
