@@ -5,6 +5,7 @@
 	+ not the other way around - you can move items in the building without the main world crashing
 * the building's cores and the main cores sync, but shouldn't
 * the building's cores don't sync materials with the building block
+	* related: items inside the block reset every time you enter/exit
 * you can't exit a building if you leave then reenter mindustry while in a building 
 * occasionally, mindustry crashes with `java.lang.RuntimeException: No stat entry found: "buildTime" in block`
 
