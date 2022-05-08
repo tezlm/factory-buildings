@@ -26,6 +26,12 @@ function create(size, storage, team) {
 		if (x < 2 || x >= size - 2) wall(tile);
 		if (y < 2 || y >= size - 2) wall(tile);
 	});
+
+	world.tiles.each((x, y) => {
+		const build = world.build(x, y);
+		if(build) build.updateProximity();
+	});
+
 	return world;
 }
 

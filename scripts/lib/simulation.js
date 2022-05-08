@@ -60,7 +60,12 @@ function Simulation(from) {
 
 		Vars.logic.play();
 		Events.fire(new WorldLoadEvent());
-	
+
+	this.world.tiles.each((x, y) => {
+		const build = this.world.build(x, y);
+		if(build) build.updateProximity();
+	});
+
 		Core.camera.position.set(size * 4, size * 4);
 		Vars.renderer.setScale(Vars.renderer.getScale() + 1);
 
