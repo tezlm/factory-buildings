@@ -7,7 +7,6 @@ function write(write, world) {
 
 		const build = world.build(x, y);
 		if (!build) return;
-		if (blocks.includes(build)) return;
 		blocks.push([build, x, y]);
 	});
 
@@ -24,9 +23,9 @@ function write(write, world) {
 function read(read, world) {
 	const blocks = read.i();
 	for (let i = 0; i < blocks; i++) {
-		const x = read.i();
-		const y = read.i();
-		const block = Vars.content.block(read.s());
+		let x = read.i();
+		let y = read.i();
+		let block = Vars.content.block(read.s());
 		world.tile(x, y).setBlock(block);
 		world.build(x, y).readAll(read, 1);
 	}
