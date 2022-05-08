@@ -8,6 +8,7 @@ function wallGen(target, team) {
 		if (storage < target) {
 			tile.setBlock(wall["factory-wall-storage"], team);
 			storage += 25;
+			print("added more storage, for a total of " + storage + " out of " + target);
 		} else {
 			tile.setBlock(wall["factory-wall"], team);
 		}
@@ -23,8 +24,8 @@ function create(size, storage, team) {
 
 		const tile = world.tile(x, y);
 		// two block thick margin
-		if (x < 2 || x >= size - 2) wall(tile);
-		if (y < 2 || y >= size - 2) wall(tile);
+		if (x < 2 || x >= size - 2 ||
+			y < 2 || y >= size - 2) wall(tile);
 	});
 
 	world.tiles.each((x, y) => {

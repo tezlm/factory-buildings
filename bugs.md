@@ -12,3 +12,4 @@
 ## fixed bugs
 
 * the floor tile uses the wrong texture
+* the building's cores have the correct amount of storage
