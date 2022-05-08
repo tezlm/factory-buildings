@@ -1,83 +1,83 @@
 const Simulation = require(this.modName + "/lib/simulation");
 const data = require(this.modName + "/lib/data");
 const facc = extendContent(Block, "factory-building", {
-  // basic factory stuff
-  requirements: ItemStack.with(Items.lead, 10, Items.copper, 20),
-  size: 4,
-  health: 1200,
-  buildVisibility: BuildVisibility.shown,
-  category: Category.effect,
-  consumesTap: true,
-  hasItems: true,
-  itemCapacity: 300,
-  unloadable: true,
-  solid: true,
-  update: true,
-  hasPower: true,
+	// basic factory stuff
+	requirements: ItemStack.with(Items.lead, 10, Items.copper, 20),
+	size: 4,
+	health: 1200,
+	buildVisibility: BuildVisibility.shown,
+	category: Category.effect,
+	consumesTap: true,
+	hasItems: true,
+	itemCapacity: 300,
+	unloadable: true,
+	solid: true,
+	update: true,
+	hasPower: true,
 });
 
 facc.buildType = () =>
-  extend(Building, {
-    pocketDimension: null,
-    oldItems: null,
-    size: 12,
+	extend(Building, {
+		pocketDimension: null,
+		oldItems: null,
+		size: 12,
 
-    placed() {
-      this.pocketDimension = new Simulation(this);
-    },
+		placed() {
+			this.pocketDimension = new Simulation(this);
+		},
 
-    // load map on click
-    tapped() {
-      if (!this.pocketDimension) {
-        this.pocketDimension = new Simulation(this);
-      }
-      this.pocketDimension.load();
-    },
+		// load map on click
+		tapped() {
+			if (!this.pocketDimension) {
+				this.pocketDimension = new Simulation(this);
+			}
+			this.pocketDimension.load();
+		},
 
-    // simulate factory
-    updateTile() {
-      if (this.pocketDimension) {
-        this.pocketDimension.tick();
-        // if (this.oldItems) {
-        //   const core = this.pocketDimension.world.build(0, 0);
-        //   if (!core) return;
-          
-        //   const dIn = {};
-        //   const dOut = {};
+		// simulate factory
+		updateTile() {
+			if (this.pocketDimension) {
+				this.pocketDimension.tick();
+				// if (this.oldItems) {
+				//   const core = this.pocketDimension.world.build(0, 0);
+				//   if (!core) return;
 
-        //   // calculate item deltas
-        //   core.items.each((item, amount) => {
-        //     dIn[item] = amount;
-        //   });
-        //   this.items.each((item, amount) => {
-        //     dOut[item] = amount;
-        //   });
-        //   this.oldItems.each((item, amount) => {
-        //     dIn[item] -= amount;
-        //     dOut[item] -= amount;
-        //   });
+				//   const dIn = {};
+				//   const dOut = {};
 
-        //   // apply changes
-        //   this.items.add(dOut);
-        //   core.items.add(dIn);
-        // }
-        // this.oldItems = this.items.copy();
-      }
-    },
+				//   // calculate item deltas
+				//   core.items.each((item, amount) => {
+				//     dIn[item] = amount;
+				//   });
+				//   this.items.each((item, amount) => {
+				//     dOut[item] = amount;
+				//   });
+				//   this.oldItems.each((item, amount) => {
+				//     dIn[item] -= amount;
+				//     dOut[item] -= amount;
+				//   });
 
-    acceptItem(source, item) {
-      return this.items.get(item) < this.block.itemCapacity;
-    },
+				//   // apply changes
+				//   this.items.add(dOut);
+				//   core.items.add(dIn);
+				// }
+				// this.oldItems = this.items.copy();
+			}
+		},
 
-    write(write) {
-      data.write(write, this);
-    },
+		acceptItem(source, item) {
+			return this.items.get(item) < this.block.itemCapacity;
+		},
 
-    read(read) {
-      this.size = read.i();
-      this.pocketDimension = new Simulation(this);
-      data.read(read, this);
-    },
-  });
+		write(write) {
+			data.write(write, this);
+		},
+
+		read(read) {
+			this.size = read.i();
+			this.pocketDimension = new Simulation(this);
+			data.read(read, this);
+		},
+	});
 
 module.exports = facc;
