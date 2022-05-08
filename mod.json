@@ -1,8 +1,10 @@
 {
-  "name": "factory-buildings",
-  "displayName": "Factory Buildings",
-  "description": "Adds factory buildings to comapct your designs",
-  "author": "ZestyLemonade (sample-text-here)",
-  "version": "0.0.1",
-  "minGameVersion": "105"
+	"name": "factory-buildings",
+	"displayName": "Factory Buildings",
+	"description": "Adds factory buildings to comapct your designs",
+	"author": "tezlm",
+	"version": "0.0.1",
+	"main": "factory.Buildings",
+	"minGameVersion": "129",
+	"java": "true"
 }
