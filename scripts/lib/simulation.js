@@ -1,101 +1,38 @@
-const world = require(this.modName + "/lib/maps");
-const exit = Vars.content.getByName(ContentType.unit, this.modName + "-exit");
-
-const sounds = {
-	open: loadSound("open"),
-	close: loadSound("close"),
-};
-
-function Simulation(from) {
-	const size = from.size;
-	this.world = world(size, from.block.itemCapacity, from.team);
-	const state = new GameState();
-	state.rules.canGameOver = false;
-	state.rules.unitCap = 9999;
-	state.rules.bannedBlocks.add(from.block);
-	state.rules.enemyCoreBuildRadius = 0;
+function Simulation(world, state) {
+	this.world = world;
 	this.state = state;
-	this.onexit = () => {};
-	this.playerUnit = null;
-	this.origin = null;
-
-	this.world.tiles.each((x, y) => {
-		const build = this.world.build(x, y);
-		if (build) build.updateProximity();
-	});
-
-	this.unload = () => {
-		if (!this.origin.hasOwnProperty("world")) return;
-
-		// load map
-		Vars.player.unit().x = this.origin.pos.x;
-		Vars.player.unit().y = this.origin.pos.y;
-		Vars.world = this.origin.world;
-		Vars.state = this.origin.state;
-
-		Vars.logic.play();
-		Events.fire(new WorldLoadEvent());
-		
-		Core.camera.position.set(this.origin.pos.x, this.origin.pos.y);
-		Vars.renderer.setScale(Vars.renderer.getScale() - 1);
-		this.origin = null;
-
-		sounds.close.play();
-	};
+	this.first = true;
 
 	this.load = () => {
-		// copy rules/world from normal world
-		this.origin = {
-			world: Vars.world,
-			state: Vars.state,
-			pos: { x: Vars.player.unit().x, y: Vars.player.unit().y },
-		};
-		this.playerUnit = Vars.player.unit();
-
-		// load map
-		Vars.player.unit().x = size * 4;
-		Vars.player.unit().y = size * 4;
 		Vars.world = this.world;
 		Vars.state = this.state;
 
+		this.world.tiles.each((x, y) => {
+			const build = this.world.build(x, y);
+			if(build) build.updateProximity();
+		});
+
 		Vars.logic.play();
 		Events.fire(new WorldLoadEvent());
-
-	this.world.tiles.each((x, y) => {
-		const build = this.world.build(x, y);
-		if(build) build.updateProximity();
-	});
-
-		Core.camera.position.set(size * 4, size * 4);
-		Vars.renderer.setScale(Vars.renderer.getScale() + 1);
-
-		const listener = () => {
-			const unit = Vars.player.unit();
-			if (unit.type === null) return;
-			if (unit.type === exit) {
-				Events.remove(Trigger.update.class, listener);
-				Vars.player.unit(this.playerUnit);
-				this.unload();
-			}
-			this.playerUnit = unit;
-		};
-		Events.on(Trigger.update.class, listener);
-
-		sounds.open.play();
 	};
 
 	this.tick = () => {
-		const world = this.origin ? this.origin.world : this.world;
-		for (let y = 0; y < world.height(); y++) {
-			for (let x = 0; x < world.width(); x++) {
+		const oldworld = Vars.world;
+		const oldstate = Vars.state;
+		Vars.world = this.world;
+		Vars.state = this.state;
+
+		for (let y = 0; y < Vars.world.height(); y++) {
+			for (let x = 0; x < Vars.world.width(); x++) {
 				const build = world.build(x, y);
 				if (!build) continue;
-				if (build.updateTile) build.updateTile();
+				if (build.update) build.update();
 			}
 		}
-	};
 
-	Vars.renderer.blocks.drawShadows();
+		Vars.world = oldworld;
+		Vars.state = oldstate;
+	};
 }
 
 module.exports = Simulation;

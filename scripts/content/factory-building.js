@@ -1,5 +1,6 @@
-const Simulation = require(this.modName + "/lib/simulation");
+const { createDimension } = require(this.modName + "/lib/create");
 const data = require(this.modName + "/lib/data");
+const state = require(this.modName + "/lib/state");
 const facc = extendContent(Block, "factory-building", {
 	// basic factory stuff
 	requirements: ItemStack.with(Items.lead, 10, Items.copper, 20),
@@ -16,22 +17,42 @@ const facc = extendContent(Block, "factory-building", {
 	hasPower: true,
 });
 
+const sounds = {
+	open: loadSound("open"),
+	close: loadSound("close"),
+};
+
 facc.buildType = () =>
 	extend(Building, {
 		pocketDimension: null,
 		oldItems: null,
 		size: 12,
+		origin: null,
 
 		placed() {
-			this.pocketDimension = new Simulation(this);
+			this.pocketDimension = createDimension(this);
 		},
 
 		// load map on click
 		tapped() {
-			if (!this.pocketDimension) {
-				this.pocketDimension = new Simulation(this);
-			}
+			if (!this.pocketDimension) this.pocketDimension = createDimension(this);
+
+			const oldState = state.save();
 			this.pocketDimension.load();
+
+			// move the camera and play sound
+			Vars.player.unit().x = this.size * 4;
+			Vars.player.unit().y = this.size * 4;
+			Vars.renderer.setScale(Vars.renderer.getScale() + 1);
+			Core.camera.position.set(this.size * 4, this.size * 4);
+			sounds.open.play();
+
+			// listen for exit condition
+			state.onExit(() => {
+				state.load(oldState);
+				Vars.renderer.setScale(Vars.renderer.getScale() - 1);
+				sounds.close.play();
+			});
 		},
 
 		// simulate factory
@@ -70,13 +91,16 @@ facc.buildType = () =>
 		},
 
 		write(write) {
-			data.write(write, this);
+			if(this.pocketDimension) {
+				data.write(write, this.pocketDimension.world);
+			} else {
+				write.i(0);
+			}
 		},
 
 		read(read) {
-			this.size = read.i();
-			this.pocketDimension = new Simulation(this);
-			data.read(read, this);
+			this.pocketDimension = createDimension(this);
+			data.read(read, this.pocketDimension.world);
 		},
 	});
 

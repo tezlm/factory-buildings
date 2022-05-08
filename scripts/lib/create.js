@@ -1,23 +1,23 @@
+const Simulation = require(this.modName + "/lib/simulation");
 const floor = require(this.modName + "/content/factory-floor");
 const wall = require(this.modName + "/content/factory-walls");
 
 // WARNING: can only do multiples of 25
-function wallGen(target, team) {
+function genWalls(target, team) {
 	let storage = 0;
 	return function (tile) {
 		if (storage < target) {
 			tile.setBlock(wall["factory-wall-storage"], team);
 			storage += 25;
-			print("added more storage, for a total of " + storage + " out of " + target);
 		} else {
 			tile.setBlock(wall["factory-wall"], team);
 		}
 	};
 }
 
-function create(size, storage, team) {
+function createWorld(size, storage, team) {
 	const world = new World();
-	const wall = wallGen(storage, team);
+	const wall = genWalls(storage, team);
 	world.resize(size, size);
 	world.tiles.each((x, y) => {
 		world.context.create(x, y, floor.id, 0, 0);
@@ -36,4 +36,22 @@ function create(size, storage, team) {
 	return world;
 }
 
-module.exports = create;
+function createState(facc) {
+	const state = new GameState();
+	state.rules.canGameOver = false;
+	state.rules.unitCap = 9999;
+	state.rules.bannedBlocks.add(facc.block);
+	state.rules.enemyCoreBuildRadius = 0;
+	return state;
+}
+
+function createDimension(facc) {
+	return new Simulation(createWorld(facc.size, facc.block.itemCapacity, facc.team), createState(facc));
+}
+
+module.exports = {
+	createWorld: createWorld,
+	createState: createState,
+	createDimension: createDimension,
+}
+

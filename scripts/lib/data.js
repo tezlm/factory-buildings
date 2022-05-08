@@ -1,44 +1,32 @@
-function write(write, facc) {
-	const world = facc.pocketDimension.world;
-	const size = facc.size;
+function write(write, world) {
+	const size = world.width();
 	const blocks = [];
-	const positions = [];
-	let total = 0,
-		tmpx,
-		tmpy,
-		tile;
 	world.tiles.each((x, y) => {
-		if (x <= 1 || x >= size - 2) return;
-		if (y <= 1 || y >= size - 2) return;
-		tile = world.build(x, y);
-		if (!tile) return;
-		if (blocks.includes(tile)) return;
-		blocks.push(tile);
-		tmpx = x;
-		tmpy = y;
-		positions.push([tmpx, tmpy]);
-		total++;
+		if (x < 2 || x >= size - 2) return;
+		if (y < 2 || y >= size - 2) return;
+
+		const build = world.build(x, y);
+		if (!build) return;
+		if (blocks.includes(build)) return;
+		blocks.push([build, x, y]);
 	});
-	write.i(size);
-	write.i(total);
+
+	write.i(blocks.length);
 	for (let i = 0; i < blocks.length; i++) {
-		const pos = positions[i];
-		write.i(pos[0]);
-		write.i(pos[1]);
-		write.s(blocks[i].block.id);
-		blocks[i].writeAll(write);
+		const [build, x, y] = blocks[i];
+		write.i(x);
+		write.i(y);
+		write.s(build.block.id);
+		build.writeAll(write);
 	}
 }
 
-function read(read, facc) {
-	// size already read
-	const world = facc.pocketDimension.world;
+function read(read, world) {
 	const blocks = read.i();
-	let x, y, block;
 	for (let i = 0; i < blocks; i++) {
-		x = read.i();
-		y = read.i();
-		block = Vars.content.block(read.s());
+		const x = read.i();
+		const y = read.i();
+		const block = Vars.content.block(read.s());
 		world.tile(x, y).setBlock(block);
 		world.build(x, y).readAll(read, 1);
 	}
