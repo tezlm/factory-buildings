@@ -7,3 +7,4 @@ known bugs
 * the building's cores and the main cores sync, but shouldn't
 * the building's cores don't sync materials with the building block
 * you can't exit a building if you leave then reenter mindustry while in a building 
+* occasionally, mindustry crashes with `java.lang.RuntimeException: No stat entry found: "buildTime" in block`
