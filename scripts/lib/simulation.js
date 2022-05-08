@@ -19,9 +19,8 @@ function Simulation(from) {
 	this.playerUnit = null;
 	this.origin = null;
 
-	let build;
 	this.world.tiles.each((x, y) => {
-		build = this.world.build(x, y);
+		const build = this.world.build(x, y);
 		if (build) build.updateProximity();
 	});
 

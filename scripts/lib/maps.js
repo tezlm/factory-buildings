@@ -2,15 +2,15 @@ const floor = require(this.modName + "/content/factory-floor");
 const wall = require(this.modName + "/content/factory-walls");
 
 // WARNING: can only do multiples of 25
-function wallGen(storage, team) {
-	let i = 0;
+function wallGen(target, team) {
+	let storage = 0;
 	return function (tile) {
-		if (i < storage) {
+		if (storage < target) {
 			tile.setBlock(wall["factory-wall-storage"], team);
+			storage += 25;
 		} else {
 			tile.setBlock(wall["factory-wall"], team);
 		}
-		i += 25;
 	};
 }
 
@@ -23,8 +23,8 @@ function create(size, storage, team) {
 
 		const tile = world.tile(x, y);
 		// two block thick margin
-		if (x <= 1 || x >= size - 2) wall(tile);
-		if (y <= 1 || y >= size - 2) wall(tile);
+		if (x < 2 || x >= size - 2) wall(tile);
+		if (y < 2 || y >= size - 2) wall(tile);
 	});
 	return world;
 }
