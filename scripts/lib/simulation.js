@@ -84,12 +84,11 @@ function Simulation(from) {
 		sounds.open.play();
 	};
 
-	this.tick = (world) => {
-		if (world == null) return;
-		let build;
+	this.tick = () => {
+		const world = this.origin ? this.origin.world : this.world;
 		for (let y = 0; y < world.height(); y++) {
 			for (let x = 0; x < world.width(); x++) {
-				build = world.build(x, y);
+				const build = world.build(x, y);
 				if (!build) continue;
 				if (build.updateTile) build.updateTile();
 			}
