@@ -59,30 +59,26 @@ facc.buildType = () =>
 		updateTile() {
 			if (this.pocketDimension) {
 				this.pocketDimension.tick();
-				// if (this.oldItems) {
-				//   const core = this.pocketDimension.world.build(0, 0);
-				//   if (!core) return;
+				const core = this.pocketDimension.world.build(0, 0);
+				if (!core) throw "how did we get here";
+				if (this.oldItems) {
+					const coreItems  = {};
+					const buildItems = {};
 
-				//   const dIn = {};
-				//   const dOut = {};
-
-				//   // calculate item deltas
-				//   core.items.each((item, amount) => {
-				//     dIn[item] = amount;
-				//   });
-				//   this.items.each((item, amount) => {
-				//     dOut[item] = amount;
-				//   });
-				//   this.oldItems.each((item, amount) => {
-				//     dIn[item] -= amount;
-				//     dOut[item] -= amount;
-				//   });
-
-				//   // apply changes
-				//   this.items.add(dOut);
-				//   core.items.add(dIn);
-				// }
-				// this.oldItems = this.items.copy();
+					// calculate and apply item deltas
+					core.items.each((item, amount) => coreItems[item]  = amount);
+					this.items.each((item, amount) => buildItems[item] = amount);
+					this.oldItems.each((item, amount) => {
+						const coreDelta  = coreItems[item] - amount;
+						const buildDelta = buildItems[item] - amount;
+						this.items.add(item, coreDelta  || 0);
+						core.items.add(item, buildDelta || 0);
+					});
+				}
+				this.oldItems = this.items.copy();
+				core.items.each((item, amount) => {
+					if(!this.oldItems.has(item)) this.oldItems.set(item, amount);
+				});
 			}
 		},
 

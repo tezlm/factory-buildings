@@ -42,6 +42,7 @@ function createState(facc) {
 	state.rules.unitCap = 9999;
 	state.rules.bannedBlocks.add(facc.block);
 	state.rules.enemyCoreBuildRadius = 0;
+//	state.rules.infiniteResources = true;
 	return state;
 }
 
