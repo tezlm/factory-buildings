@@ -1,7 +1,7 @@
 const exit = require(this.modName + "/content/exit");
 
 ["factory-wall", "factory-wall-storage"].forEach((i) => {
-	const wall = extendContent(CoreBlock, i, {
+	const wall = extend(CoreBlock, i, {
 		unitType: exit,
 		size: 1,
 		breakable: false,
@@ -15,7 +15,7 @@ const exit = require(this.modName + "/content/exit");
 	// wall.outputsPower = true;
 	// wall.unitType = exit;
 	wall.buildType = () =>
-		extendContent(CoreBlock.CoreBuild, wall, {
+		extend(CoreBlock.CoreBuild, wall, {
 			tapped() {
 				this.onControlSelect(Vars.player.unit())
 			},

@@ -26,11 +26,11 @@ function onExit(call) {
 		const unit = Vars.player.unit();
 		if (unit.type === null) return;
 		if (unit.type === exit) {
-			Events.remove(Trigger.update.class, listener);
+			Events.remove(UnitChangeEvent, listener);
 			call();
 		}
 	};
-	Events.on(Trigger.update.class, listener);
+	Events.on(UnitChangeEvent, listener);
 }
 
 module.exports = {

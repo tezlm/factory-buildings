@@ -1,3 +1,3 @@
-module.exports = extendContent(Floor, "factory-floor", {
+module.exports = extend(Floor, "factory-floor", {
 	variants: 1,
 });

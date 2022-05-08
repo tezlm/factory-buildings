@@ -5,6 +5,6 @@
 	"author": "tezlm",
 	"version": "0.0.1",
 	"main": "factory.Buildings",
-	"minGameVersion": "129",
+	"minGameVersion": "139",
 	"java": "true"
 }

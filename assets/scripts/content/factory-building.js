@@ -1,7 +1,7 @@
 const { createDimension } = require(this.modName + "/lib/create");
 const data = require(this.modName + "/lib/data");
 const state = require(this.modName + "/lib/state");
-const facc = extendContent(Block, "factory-building", {
+const facc = extend(Block, "factory-building", {
 	// basic factory stuff
 	requirements: ItemStack.with(Items.lead, 10, Items.copper, 20),
 	size: 4,
@@ -18,8 +18,8 @@ const facc = extendContent(Block, "factory-building", {
 });
 
 const sounds = {
-	open: loadSound("open"),
-	close: loadSound("close"),
+	open: Vars.tree.loadSound("open"),
+	close: Vars.tree.loadSound("close"),
 };
 
 facc.buildType = () =>
